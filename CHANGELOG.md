@@ -43,6 +43,11 @@ Changed:
 - Moved the reference scenarios into the package, at `aeromaps/resources/scenarios/`: one folder per scenario holding its configurations and inputs, with the shared market definitions beside them and a `scenario.yaml` giving each a name, a category (institutional, industrial or academic) and tags. `aeromaps.utils.scenarios` lists and filters them, and `prepare_scenario` copies one into a sandbox before it is run. That copy is the point: the scenario notebooks write, both their outputs and their regenerated tank-to-wake twins, so running one in place edited the installed package. The results those runs produce stay with the publication that reports them. Covers the ATAG editions and their coupled-demand and climate extensions, the ICAO LTAG scenarios from the ECATS study, and the coupled LTAG scenarios from the WCTR one. (#144)
 - Moved the ATAG document and notebooks to `aeromaps/notebooks/publications/atag_scenarios/`, alongside the other publications, and removed the `notebooks/scenarios/` tree that held only them. No committed result changed. (#144)
 - Dropped the duplicated `socioeconomic_drivers` custom model from the WCTR configurations and the test fixtures, which declared a file identical to the packaged model. The built discipline set is unchanged either way. (#144)
+- New unit system (`aeromaps/utils/units.py`): controlled vocabulary of unit symbols, parsing of compound expressions, validation, and conversions (`convert`, `convert_factor`) with dimensional checks.
+- Variable metadata (unit, description, source) moved from `data_information.csv` to `data_information.yaml`, with exact entries plus ordered glob patterns for dynamically named variables (energy pathways, processes, climate species, LCA). All units are validated against the vocabulary at load time.
+- Full metadata coverage: every variable of the tested configurations is now documented (previously ~1350 variables had no unit/description), enforced by the test suite.
+- New config key `data.inputs.data_information_file`; `csv_data_information_file` is deprecated but still read.
+- New API: `process.get_variable_information(name)` to query the unit/description of a variable.
 
 Fixed:
 - Corrected a family of silent-zero defects in the generic energy model, where a misspelled or
