@@ -418,8 +418,8 @@ class MultiRegionalProcess(AeroMAPSProcess):
             )
 
         if getattr(model, "model_type") == "custom":
-            return AeroMAPSCustomModelWrapper(model=model)
-        return AeroMAPSAutoModelWrapper(model=model)
+            return AeroMAPSCustomModelWrapper(model=model, metadata=self._load_data_information())
+        return AeroMAPSAutoModelWrapper(model=model, metadata=self._load_data_information())
 
     def _build_namespaced_top_level_disciplines(self):
         """Build top-level model disciplines namespaced to the global namespace.
@@ -452,7 +452,9 @@ class MultiRegionalProcess(AeroMAPSProcess):
             [aggregator_discipline, *namespaced_top_level_disciplines].
         """
         return [
-            AeroMAPSCustomModelWrapper(model=self.models["aggregator"])
+            AeroMAPSCustomModelWrapper(
+                model=self.models["aggregator"], metadata=self._load_data_information()
+            )
         ] + self._build_namespaced_top_level_disciplines()
 
     def _setup_separate_processes(self):
@@ -495,7 +497,9 @@ class MultiRegionalProcess(AeroMAPSProcess):
             all_disciplines.extend(self._regional_disciplines[region_id])
 
         # Add aggregator as a discipline
-        aggregator_discipline = AeroMAPSCustomModelWrapper(model=self.models["aggregator"])
+        aggregator_discipline = AeroMAPSCustomModelWrapper(
+            model=self.models["aggregator"], metadata=self._load_data_information()
+        )
         all_disciplines.append(aggregator_discipline)
 
         # Add optional top-level models (namespaced to the global namespace) so they
